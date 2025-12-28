@@ -5,11 +5,11 @@ Github Pages site for `White Blood Games`, used to download build files.
 
 ## Technicals
 
-This project was generated with `Angular CLI version 16.2.16` and `node 16.14.0`, using Material.
+This project was generated with `Angular CLI version 16.2.16` and `node 16.14.0`, using `@angular/material 16`.
 
 ## Development
 
-Run `npm run start` (Always on Hebrew version). The projects builds and deploys automatically on merge to `master`.
+Run `npm run start`. The projects builds and deploys automatically on merge to `master`.
 
 ## Installation
 
