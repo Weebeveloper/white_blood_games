@@ -1,70 +1,85 @@
-<header class="header__container mat-elevation-z4">
-  <div class="header__logo">White Blood Development</div>
-</header>
+<div class="page">
+  <header class="header__container mat-elevation-z4">
+    <div class="header__logo">White Blood Development</div>
+  </header>
 
-<section class="hero__container">
-  <div class="hero__overlay"></div>
+  <section class="hero__container">
+    <div class="hero__overlay"></div>
 
-  <img #float1 src="assets/sahar.png" class="hero__float hero__float1" />
-  <img #float2 src="assets/erel.png" class="hero__float hero__float2" />
+    <img #float1 src="assets/sahar.png" class="hero__float hero__float1" />
+    <img #float2 src="assets/erel.png" class="hero__float hero__float2" />
 
-  <div class="hero__content">
-    <h1>Welcome to White Blood Games</h1>
-    <p>developing fun game projects.</p>
-  </div>
-</section>
-
-<section class="downloads__container">
-  <h2>Downloads</h2>
-
-  <div class="downloads__grid">
-    <div
-      class="download__card mat-elevation-z2"
-      *ngFor="let item of downloadItems"
-    >
-      <div class="download__content">
-        <mat-icon class="download__icon" [svgIcon]="item.icon"></mat-icon>
-
-        <div class="download__name">
-          {{ item.name }}
-        </div>
-      </div>
-
-      <div class="download__description">
-        {{ item.description }}
-      </div>
-
-      <button
-        mat-flat-button
-        color="primary"
-        class="download__button"
-        (click)="onDownload(item.fileUrl)"
-      >
-        <mat-icon svgIcon="download" class="download__button__icon"></mat-icon>
-        <span class="download__button__text">Download</span>
-      </button>
+    <div class="hero__content">
+      <h1>Welcome to White Blood Games</h1>
+      <p>developing fun game projects.</p>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="about__container">
-  <h2>About The Website</h2>
-  <p>
-    White Blood Games is being used as an hub for downloading demos and
-    development builds when working on a project,
-  </p>
-  <p>
-    additional resources of the current active project can be found clicking on
-    the Mural Icon in the bottom of the website.
-  </p>
-</section>
+  <section class="news__container">
+    <h2>Latest News</h2>
 
-<footer class="footer__container">
-  <div class="footer__credits">© 2025 White Blood Development</div>
+    <div class="news__carousel" #newsCarousel>
+      <div class="news__card" *ngFor="let news of news$ | async">
+        <div class="news__project">
+          {{ news.project }} <span>({{ news.category }})</span>
+        </div>
+        <div class="news__content">{{ news.news }}</div>
+      </div>
+    </div>
+  </section>
 
-  <div class="footer__links">
-    <a mat-icon-button [href]="ACTIVE_MURAL_LINK" target="_blank">
-      <mat-icon>dashboard</mat-icon>
-    </a>
-  </div>
-</footer>
+  <section class="downloads__container">
+    <h2>Downloads</h2>
+
+    <div class="downloads__grid">
+      <div class="download__card" *ngFor="let item of downloadItems$ | async">
+        <div class="download__content">
+          <mat-icon class="download__icon" [svgIcon]="item.icon"></mat-icon>
+
+          <div class="download__name">
+            {{ item.name }}
+          </div>
+        </div>
+
+        <div class="download__description">
+          {{ item.description }}
+        </div>
+
+        <button
+          mat-flat-button
+          color="primary"
+          class="download__button"
+          (click)="onDownload(item.fileUrl)"
+        >
+          <mat-icon
+            svgIcon="download"
+            class="download__button__icon"
+          ></mat-icon>
+          <span class="download__button__text">Download</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="about__container">
+    <h2>About The Website</h2>
+    <p>
+      White Blood Games is being used as an hub for downloading demos and
+      development builds when working on a project,
+    </p>
+    <p>
+      additional resources of the current active project can be found clicking
+      on the Mural Icon in the bottom of the website.
+    </p>
+  </section>
+
+  <footer class="footer__container">
+    <div class="footer__credits">© 2025 White Blood Development</div>
+
+    <div class="footer__links">
+      <a mat-icon-button [href]="ACTIVE_MURAL_LINK" target="_blank">
+        <mat-icon>dashboard</mat-icon>
+      </a>
+    </div>
+  </footer>
+</div>

@@ -7,14 +7,8 @@ import {
 } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { AdapterService } from './adapter.service';
 import { appIcons } from './app-icons';
-
-interface IDownloadItem {
-  readonly name: string;
-  readonly icon: string;
-  readonly description: string;
-  readonly fileUrl: string;
-}
 
 @Component({
   selector: 'app-root',
@@ -28,34 +22,55 @@ export class AppComponent implements AfterViewInit {
   @ViewChild('float2', { static: false })
   _float2!: ElementRef<HTMLImageElement>;
 
+  @ViewChild('newsCarousel', { static: false })
+  _newsCarousel!: ElementRef<HTMLDivElement>;
+
   readonly ACTIVE_MURAL_LINK =
     'https://app.mural.co/invitation/team/fixit9172?code=15043b21614948eaa63d2a5221272fb5&sender=u2c566107b20c9ed06d122316&returnUrl=%2Ft%2Ffixit9172%2Fm%2Ffixit9172%2F1766943086950%2F527bfc2190980689f33a5a61a3c6feb6e67a29b9%3Fsender%3Du2c566107b20c9ed06d122316';
 
-  readonly downloadItems: readonly IDownloadItem[] = [
-    {
-      name: 'Fix It!',
-      icon: 'fixit_icon',
-      description:
-        'You play as an electrician, your job is to to find issued, buy parts and fix the house while the clock is ticking.',
-      fileUrl:
-        'https://drive.google.com/uc?export=download&id=1r3WSXn-xt7BFxXD3ISq0dR-GXTLgp90u',
-    },
-  ];
+  readonly downloadItems$ = this._adapter.getProjects();
+  readonly news$ = this._adapter.getNews();
 
   ngAfterViewInit(): void {
     this._animateFloat(this._float1.nativeElement);
     this._animateFloat(this._float2.nativeElement);
+
+    this._initNewsCarousel();
   }
 
   constructor(
     private readonly _iconRegistry: MatIconRegistry,
-    private readonly _sanitizer: DomSanitizer
+    private readonly _sanitizer: DomSanitizer,
+    private readonly _adapter: AdapterService
   ) {
     this._registerSvgIcons();
   }
 
   onDownload(fileUrl: string): void {
     window.location.href = fileUrl;
+  }
+
+  private _initNewsCarousel(): void {
+    const carousel = this._newsCarousel.nativeElement;
+    let isDragging = false;
+    let startX = 0;
+    let scrollLeft = 0;
+
+    carousel.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      startX = e.pageX - carousel.offsetLeft;
+      scrollLeft = carousel.scrollLeft;
+    });
+
+    carousel.addEventListener('mouseleave', () => (isDragging = false));
+    carousel.addEventListener('mouseup', () => (isDragging = false));
+    carousel.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      e.preventDefault();
+      const x = e.pageX - carousel.offsetLeft;
+      const walk = (x - startX) * 1.5;
+      carousel.scrollLeft = scrollLeft - walk;
+    });
   }
 
   private _animateFloat(el: HTMLElement): void {
@@ -75,8 +90,7 @@ export class AppComponent implements AfterViewInit {
     const spawn = () => {
       const pos = getRandomPosition();
 
-      // Tiny movement offset (barely visible)
-      const maxOffset = 2; // ±2px
+      const maxOffset = 2;
       const offsetX = (Math.random() - 0.5) * 2 * maxOffset;
       const offsetY = (Math.random() - 0.5) * 2 * maxOffset;
       const endPos = {
@@ -84,7 +98,6 @@ export class AppComponent implements AfterViewInit {
         y: Math.max(0, Math.min(pos.y + offsetY, heroRect.height - 150)),
       };
 
-      // Set initial position instantly
       el.style.transition = 'none';
       el.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
       el.style.opacity = '0';
@@ -96,16 +109,14 @@ export class AppComponent implements AfterViewInit {
         el.style.transform = `translate(${endPos.x}px, ${endPos.y}px)`;
       });
 
-      // Fade out after short visible time
       setTimeout(() => {
         el.style.transition = 'opacity 1s ease-in-out';
         el.style.opacity = '0';
 
-        scheduleNext(); // schedule next appearance
-      }, 2000 + Math.random() * 1000); // visible 2-3s
+        scheduleNext();
+      }, 2000 + Math.random() * 1000);
     };
 
-    // Initial random delay
     setTimeout(spawn, Math.random() * 10000);
   }
 
