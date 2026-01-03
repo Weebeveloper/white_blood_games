@@ -2,6 +2,6 @@ Fix It!||New UI changes - now interaction are visually prompting the player, to 
 
 Fix It!||A new arm with a grab feature has been added!, now in testing you can grab with [E] and release with [Q].
 
-Fix It!|Logging has been added to the project, console outing everything in the development build.
+Fix It!||Logging has been added to the project, console outing everything in the development build.
 
 Fix It!||A new project has been initiated! Fix It! fix random ahh electronics.
