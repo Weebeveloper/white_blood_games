@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { SwiperContainer } from 'swiper/element';
 import { AdapterService } from './adapter.service';
 import { appIcons } from './app-icons';
 
@@ -22,8 +23,8 @@ export class AppComponent implements AfterViewInit {
   @ViewChild('float2', { static: false })
   _float2!: ElementRef<HTMLImageElement>;
 
-  @ViewChild('newsCarousel', { static: false })
-  _newsCarousel!: ElementRef<HTMLDivElement>;
+  @ViewChild('swiper', { read: ElementRef })
+  swiperRef!: ElementRef<SwiperContainer>;
 
   readonly ACTIVE_MURAL_LINK =
     'https://app.mural.co/invitation/team/fixit9172?code=15043b21614948eaa63d2a5221272fb5&sender=u2c566107b20c9ed06d122316&returnUrl=%2Ft%2Ffixit9172%2Fm%2Ffixit9172%2F1766943086950%2F527bfc2190980689f33a5a61a3c6feb6e67a29b9%3Fsender%3Du2c566107b20c9ed06d122316';
@@ -35,7 +36,7 @@ export class AppComponent implements AfterViewInit {
     this._animateFloat(this._float1.nativeElement);
     this._animateFloat(this._float2.nativeElement);
 
-    this._initNewsCarousel();
+    this._initSwiper();
   }
 
   constructor(
@@ -48,29 +49,6 @@ export class AppComponent implements AfterViewInit {
 
   onDownload(fileUrl: string): void {
     window.location.href = fileUrl;
-  }
-
-  private _initNewsCarousel(): void {
-    const carousel = this._newsCarousel.nativeElement;
-    let isDragging = false;
-    let startX = 0;
-    let scrollLeft = 0;
-
-    carousel.addEventListener('mousedown', (e) => {
-      isDragging = true;
-      startX = e.pageX - carousel.offsetLeft;
-      scrollLeft = carousel.scrollLeft;
-    });
-
-    carousel.addEventListener('mouseleave', () => (isDragging = false));
-    carousel.addEventListener('mouseup', () => (isDragging = false));
-    carousel.addEventListener('mousemove', (e) => {
-      if (!isDragging) return;
-      e.preventDefault();
-      const x = e.pageX - carousel.offsetLeft;
-      const walk = (x - startX) * 1.5;
-      carousel.scrollLeft = scrollLeft - walk;
-    });
   }
 
   private _animateFloat(el: HTMLElement): void {
@@ -118,6 +96,24 @@ export class AppComponent implements AfterViewInit {
     };
 
     setTimeout(spawn, Math.random() * 10000);
+  }
+
+  private _initSwiper() {
+    Object.assign(this.swiperRef.nativeElement, {
+      slidesPerView: 1,
+      spaceBetween: 16,
+
+      breakpoints: {
+        768: {
+          slidesPerView: 1,
+        },
+        1024: {
+          slidesPerView: 4,
+        },
+      },
+    });
+
+    this.swiperRef.nativeElement.initialize();
   }
 
   private _registerSvgIcons(): void {

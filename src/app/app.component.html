@@ -18,13 +18,20 @@
   <section class="news__container">
     <h2>Latest News</h2>
 
-    <div class="news__carousel" #newsCarousel>
-      <div class="news__card" *ngFor="let news of news$ | async">
-        <div class="news__project">
-          {{ news.project }} <span>({{ news.category }})</span>
-        </div>
-        <div class="news__content">{{ news.news }}</div>
-      </div>
+    <div class="news-slider-wrapper">
+      <swiper-container #swiper class="news__carousel">
+        <swiper-slide *ngFor="let news of news$ | async">
+          <div class="news__card">
+            <div class="news__project">
+              {{ news.project }}
+              <span>({{ news.category }})</span>
+            </div>
+            <div class="news__content">
+              {{ news.news }}
+            </div>
+          </div>
+        </swiper-slide>
+      </swiper-container>
     </div>
   </section>
 
