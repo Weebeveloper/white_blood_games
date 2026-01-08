@@ -32,6 +32,8 @@ export class AppComponent implements AfterViewInit {
   readonly downloadItems$ = this._adapter.getProjects();
   readonly news$ = this._adapter.getNews();
 
+  readonly currentYear = new Date();
+
   ngAfterViewInit(): void {
     this._animateFloat(this._float1.nativeElement);
     this._animateFloat(this._float2.nativeElement);
